@@ -9,32 +9,41 @@ import Gallery from "./components/Gallery";
 import Team from "./components/Team";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 export default function App() {
+  const [page, setPage] = useState("home"); // "home" | "login" | "register"
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
+    if (page !== "home") return;
     const onScroll = () => {
       setScrolled(window.scrollY > 60);
       const sections = navLinks.map(n => n.href.slice(1));
       for (let s of [...sections].reverse()) {
         const el = document.getElementById(s);
-        if (el && window.scrollY >= el.offsetTop - 120) {
-          setActiveSection(s);
-          break;
-        }
+        if (el && window.scrollY >= el.offsetTop - 120) { setActiveSection(s); break; }
       }
     };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [page]);
 
   const scrollTo = (id) => {
     document.getElementById(id.slice(1))?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
+
+  const navigate = (target) => {
+    setPage(target);
+    window.scrollTo(0, 0);
+  };
+
+  if (page === "login") return <Login onNavigate={navigate} />;
+  if (page === "register") return <Register onNavigate={navigate} />;
 
   return (
     <div style={{ fontFamily: "'Georgia', serif", color: "#1a1a1a", minHeight: "100vh", overflowX: "hidden" }}>
@@ -44,8 +53,9 @@ export default function App() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         scrollTo={scrollTo}
+        onNavigate={navigate}
       />
-      <Hero scrollTo={scrollTo} />
+      <Hero scrollTo={scrollTo} onNavigate={navigate} />
       <About />
       <Programme />
       <Subprojects />

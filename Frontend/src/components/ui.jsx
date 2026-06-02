@@ -12,7 +12,7 @@ export function Avatar({ initials, size = 48 }) {
 
 export function Logo({ size = 40 }) {
   return (
-    <img src="/icon.jpeg" alt="Muziki Kwetu Logo" style={{ width: size, height: size, borderRadius: 8, objectFit: "contain", background: "white" }} onError={e => { e.target.style.display = "none"; }} />
+    <img src="/image.png" alt="Muziki Kwetu Logo" style={{ width: size, height: size, objectFit: "contain", background: "transparent" }} onError={e => { e.target.style.display = "none"; }} />
   );
 }
 

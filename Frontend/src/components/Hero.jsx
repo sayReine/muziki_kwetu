@@ -2,7 +2,7 @@ import { MapPin, ArrowRight, Music, Mic, Guitar, ChevronDown } from "lucide-reac
 import { BRAND } from "../constants.jsx";
 import { Logo } from "./ui";
 
-export default function Hero({ scrollTo }) {
+export default function Hero({ scrollTo, onNavigate }) {
   return (
     <section id="home" style={{ minHeight: "100vh", background: `linear-gradient(135deg, #1a0a0a 0%, #3d0e0e 40%, #6b1a1a 70%, ${BRAND} 100%)`, display: "flex", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: 68 }}>
       {[...Array(5)].map((_, i) => (
@@ -29,6 +29,9 @@ export default function Hero({ scrollTo }) {
               <button onClick={() => scrollTo("#contact")} style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", color: "white", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 10, padding: "14px 28px", fontSize: 15, fontFamily: "sans-serif", fontWeight: 600, cursor: "pointer" }}>
                 Nous Contacter
               </button>
+              <button onClick={() => onNavigate("register")} style={{ display: "flex", alignItems: "center", gap: 8, background: "#FAD7A0", color: "#7B241C", border: "none", borderRadius: 10, padding: "14px 28px", fontSize: 15, fontFamily: "sans-serif", fontWeight: 700, cursor: "pointer" }}>
+                S'inscrire au programme
+              </button>
             </div>
             <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
               {[["2022", "Fondé en"], ["4", "Villes"], ["6", "Sous-projets"], ["900K$", "Budget estimé"]].map(([val, label]) => (
@@ -44,7 +47,7 @@ export default function Hero({ scrollTo }) {
             <div style={{ position: "relative" }}>
               <div style={{ width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,0.05)", border: "3px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "3px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Logo size={160} />
+                  <Logo size={450} style={{objectFit: "contain"}} />
                 </div>
               </div>
               {[{ icon: <Music size={20} />, pos: { top: -10, right: 20 } }, { icon: <Mic size={20} />, pos: { bottom: 10, left: -10 } }, { icon: <Guitar size={20} />, pos: { top: "50%", right: -20 } }].map((item, i) => (
