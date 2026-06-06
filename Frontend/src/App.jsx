@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { navLinks } from "./constants.jsx";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -11,15 +12,17 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import AdminRegister from "./components/AdminRegister";
+import AdminDashboard from "./components/AdminDashboard";
+import UserDashboard from "./components/UserDashboard";
 
-export default function App() {
-  const [page, setPage] = useState("home"); // "home" | "login" | "register"
+function HomePage() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
-    if (page !== "home") return;
     const onScroll = () => {
       setScrolled(window.scrollY > 60);
       const sections = navLinks.map(n => n.href.slice(1));
@@ -30,20 +33,18 @@ export default function App() {
     };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, [page]);
+  }, []);
 
   const scrollTo = (id) => {
     document.getElementById(id.slice(1))?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
-  const navigate = (target) => {
-    setPage(target);
+  const onNavigate = (target) => {
+    if (target === "home") { window.scrollTo(0, 0); return; }
+    navigate(`/${target}`);
     window.scrollTo(0, 0);
   };
-
-  if (page === "login") return <Login onNavigate={navigate} />;
-  if (page === "register") return <Register onNavigate={navigate} />;
 
   return (
     <div style={{ fontFamily: "'Georgia', serif", color: "#1a1a1a", minHeight: "100vh", overflowX: "hidden" }}>
@@ -53,9 +54,9 @@ export default function App() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         scrollTo={scrollTo}
-        onNavigate={navigate}
+        onNavigate={onNavigate}
       />
-      <Hero scrollTo={scrollTo} onNavigate={navigate} />
+      <Hero scrollTo={scrollTo} onNavigate={onNavigate} />
       <About />
       <Programme />
       <Subprojects />
@@ -82,5 +83,19 @@ export default function App() {
         button:hover { opacity: 0.9; }
       `}</style>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<UserDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      {/* Hidden admin registration — not linked anywhere in the normal UI */}
+      <Route path="/admin/register" element={<AdminRegister />} />
+    </Routes>
   );
 }

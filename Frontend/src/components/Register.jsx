@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Phone, ArrowRight, Eye, EyeOff, Music, CheckCircle } from "lucide-react";
 import { BRAND, BRAND_DARK, BRAND_LIGHT, subprojects } from "../constants.jsx";
 import { Logo } from "./ui";
@@ -6,6 +7,7 @@ import { Logo } from "./ui";
 const programmes = subprojects.map(s => s.title);
 
 export default function Register({ onNavigate }) {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showPwd, setShowPwd] = useState(false);
   const [done, setDone] = useState(false);
@@ -42,7 +44,9 @@ export default function Register({ onNavigate }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.motivation) { setError("Veuillez écrire une motivation."); return; }
-    // TODO: connect to backend
+    const users = JSON.parse(localStorage.getItem("mk_users") || "[]");
+    users.push({ ...form, role: "user", joinedAt: new Date().toISOString() });
+    localStorage.setItem("mk_users", JSON.stringify(users));
     setDone(true);
   };
 
@@ -59,7 +63,7 @@ export default function Register({ onNavigate }) {
           Bienvenue dans la famille <strong>MUZIKI KWETU</strong>, {form.firstName} !<br />
           Votre demande d'inscription au programme <strong>{form.programme}</strong> a été reçue. Nous vous contacterons bientôt.
         </p>
-        <button onClick={() => onNavigate("home")} style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, color: "white", border: "none", borderRadius: 10, padding: "12px 28px", fontSize: 15, fontFamily: "sans-serif", fontWeight: 700, cursor: "pointer" }}>
+        <button onClick={() => navigate("/")} style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, color: "white", border: "none", borderRadius: 10, padding: "12px 28px", fontSize: 15, fontFamily: "sans-serif", fontWeight: 700, cursor: "pointer" }}>
           Retour au site
         </button>
       </div>
@@ -204,11 +208,11 @@ export default function Register({ onNavigate }) {
 
           <p style={{ textAlign: "center", fontFamily: "sans-serif", fontSize: 14, color: "#888", marginTop: 20, marginBottom: 0 }}>
             Déjà membre ?{" "}
-            <span onClick={() => onNavigate("login")} style={{ color: BRAND, fontWeight: 700, cursor: "pointer" }}>Se connecter</span>
+            <span onClick={() => navigate("/login")} style={{ color: BRAND, fontWeight: 700, cursor: "pointer" }}>Se connecter</span>
           </p>
         </div>
 
-        <p style={{ textAlign: "center", marginTop: 20, fontFamily: "sans-serif", fontSize: 13, color: "rgba(255,255,255,0.6)", cursor: "pointer" }} onClick={() => onNavigate("home")}>
+        <p style={{ textAlign: "center", marginTop: 20, fontFamily: "sans-serif", fontSize: 13, color: "rgba(255,255,255,0.6)", cursor: "pointer" }} onClick={() => navigate("/")}>
           ← Retour au site
         </p>
       </div>

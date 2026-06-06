@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { X, ChevronLeft, ChevronRight, Play, Volume2, VolumeX } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Play,
+  //  Volume2,
+    VolumeX } from "lucide-react";
 import { BRAND } from "../constants.jsx";
 import { SectionHeader } from "./ui";
 

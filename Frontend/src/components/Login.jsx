@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Music, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { BRAND, BRAND_DARK, BRAND_LIGHT } from "../constants.jsx";
 import { Logo } from "./ui";
 
 export default function Login({ onNavigate }) {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState("");
@@ -18,8 +20,26 @@ export default function Login({ onNavigate }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.email || !form.password) { setError("Veuillez remplir tous les champs."); return; }
-    // TODO: connect to backend auth
-    setError("Connexion en cours...");
+
+    // Check admins
+    const admins = JSON.parse(localStorage.getItem("mk_admins") || "[]");
+    const admin = admins.find(a => a.email === form.email && a.password === form.password);
+    if (admin) {
+      localStorage.setItem("mk_current_user", JSON.stringify(admin));
+      navigate("/admin");
+      return;
+    }
+
+    // Check regular users
+    const users = JSON.parse(localStorage.getItem("mk_users") || "[]");
+    const user = users.find(u => u.email === form.email && u.password === form.password);
+    if (user) {
+      localStorage.setItem("mk_current_user", JSON.stringify(user));
+      navigate("/dashboard");
+      return;
+    }
+
+    setError("Email ou mot de passe incorrect.");
   };
 
   return (
@@ -89,14 +109,14 @@ export default function Login({ onNavigate }) {
 
           <p style={{ textAlign: "center", fontFamily: "sans-serif", fontSize: 14, color: "#888", margin: 0 }}>
             Pas encore membre ?{" "}
-            <span onClick={() => onNavigate("register")} style={{ color: BRAND, fontWeight: 700, cursor: "pointer" }}>
+            <span onClick={() => navigate("/register")} style={{ color: BRAND, fontWeight: 700, cursor: "pointer" }}>
               S'inscrire au programme
             </span>
           </p>
         </div>
 
         {/* Back to site */}
-        <p style={{ textAlign: "center", marginTop: 20, fontFamily: "sans-serif", fontSize: 13, color: "rgba(255,255,255,0.6)", cursor: "pointer" }} onClick={() => onNavigate("home")}>
+        <p style={{ textAlign: "center", marginTop: 20, fontFamily: "sans-serif", fontSize: 13, color: "rgba(255,255,255,0.6)", cursor: "pointer" }} onClick={() => navigate("/")}>
           ← Retour au site
         </p>
       </div>
